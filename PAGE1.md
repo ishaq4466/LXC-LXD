@@ -1,27 +1,36 @@
-LXC/LXD COntainers:
+LXC/LXD Containers:
 LXC=>Linux Container or CLI for lxd
 LXD=> Linux daemon
 
-* They are full OS containers i.e machine containers
+
+* They are full OS containers i.e machine/system containers
 * Where as Docker are Application container which contains only the 
 specific binaries which the application required
-* LXC/LXD containers full as linux hypervisors 
+* Docker initially relied on LXC as its container interface, but because LXC provides each container with a full 
+Linux system in 
+an isolated namespace, Docker developed the containerd runtime as a replacement. When comparing
+ Docker vs. LXC, consider the main difference that containerd is only used for single application containers,
+ while LXC is able to run multiple applications inside system containers.
 * Docker container supports some enhace version of LXD like versioning,port-mapping 
-UFS therefore LXD is the backed version of LXD containers
+	UFS therefore LXD is the backed version of LXD containers
 * Very light weight VM
 * Can run LXD inside LXD
 
-1. Installation of LXC/LXD:
+# 1. Installation of LXC/LXD:
+```
 $ sudo apt-get install lxd lxd-client 
 $ sudo lxd init
+```
+# 2. Trouble shooting the installation
 
-2. Trouble shooting the installation
 Networking on the host has failed. Remove and re-add the lxdbr0 Linux Bridge.    
 if you get an error about a missing parent for an ethernet device, what is the solution
+```
 sudo dpk-reconfigure -p medium lxd
 lxd init
-
-3. Conatiner creation, Listing, stopping the containers
+```
+# 3. Conatiner creation, Listing, stopping the containers
+```
 * Listing all the running lxd containers
 lxc list 
 * Launching a containers from image
@@ -45,8 +54,9 @@ lxc exec ubuntu -- /bin/bash
 lxc exec ubuntu -- apt-get update && apt-get install git
 lxc file edit [container]/[path/to/file]
 
+```
+# Snapshots:
 
-Snapshots:
 * Creating a snapshot of running container
 lxc snapshot web snap1 
 * Restroing the web container to previous state of snap0
@@ -61,7 +71,8 @@ snapshot
 
 
 ##4.Remotes 
-#Congiguring an lxd remote on other machine
+# Congiguring an lxd remote on other machine
+
 1. Get the local ip of that configuration machine
 ifconfig
 
@@ -72,9 +83,11 @@ lxc config set core.trust_password secret
 
 
 3. Add the remote to the first machine
+
 lxc remote add second <ip-addr>:8443 --password=secret
 
-4. For nested container i.e **lxd inside lxd** set secuity nesting true 
+# 4. For nested container i.e **lxd inside lxd** set secuity nesting true 
+
 lxc config set ubuntu security.nesting true
 
 # Publishing, exporting, examing the container's images
@@ -131,3 +144,4 @@ lxc config set core.https_address "[::]:8443"
 lxc config set core.trust_password secret
 
 
+https://searchitoperations.techtarget.com/tip/Explore-Docker-vs-LXC-through-the-lens-of-a-three-tier-app
